@@ -1,0 +1,284 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Datavision- Analytics Dashboard</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SheetJS - Excel Reader -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">D</div>
+                <div>
+                    <h2>DataVision</h2>
+                    <span>Analytics</span>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <a href="#dashboard" class="menu-item active">
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#upload" class="menu-item">
+                    <span>↑</span>
+                    Upload Data
+                </a>
+
+                <a href="#charts" class="menu-item">
+                    <span>◒</span>
+                    Analytics
+                </a>
+
+                <a href="#data" class="menu-item">
+                    <span>▤</span>
+                    Data Table
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>Excel Analytics Tool</p>
+                <small>Client-side processing</small>
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <div>
+                    <h1>Data Analytics Dashboard</h1>
+                    <p>Upload your Excel file and turn data into insights.</p>
+                </div>
+
+                <button class="reset-btn" id="resetBtn">
+                    ↻ Reset
+                </button>
+
+            </header>
+
+
+            <!-- ================= UPLOAD ================= -->
+            <section class="upload-section" id="upload">
+
+                <div class="upload-box">
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <h2>Upload Excel File</h2>
+
+                    <p>
+                        Upload an Excel or CSV file to generate your dashboard.
+                    </p>
+
+                    <label for="fileInput" class="upload-btn">
+                        Choose Excel File
+                    </label>
+
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+
+                    <p class="file-info">
+                        Supported: .xlsx, .xls, .csv
+                    </p>
+
+                    <div id="fileName"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= DASHBOARD ================= -->
+            <section id="dashboard">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Overview</h2>
+                        <p>Your business performance at a glance.</p>
+                    </div>
+                </div>
+
+
+                <!-- STAT CARDS -->
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Sales</span>
+                            <div class="stat-icon sales">₹</div>
+                        </div>
+
+                        <h3 id="totalSales">₹0</h3>
+                        <p>From uploaded data</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Orders</span>
+                            <div class="stat-icon orders">#</div>
+                        </div>
+
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total records</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Average Sale</span>
+                            <div class="stat-icon average">↗</div>
+                        </div>
+
+                        <h3 id="averageSales">₹0</h3>
+                        <p>Average per order</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Top Product</span>
+                            <div class="stat-icon product">★</div>
+                        </div>
+
+                        <h3 id="topProduct">-</h3>
+                        <p>Highest sales</p>
+                    </div>
+
+                </div>
+
+
+                <!-- ================= CHARTS ================= -->
+                <section id="charts">
+
+                    <div class="charts-grid">
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+                                <div>
+                                    <h3>Sales by Product</h3>
+                                    <p>Product performance</p>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="productChart"></canvas>
+                            </div>
+
+                        </div>
+
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+                                <div>
+                                    <h3>Sales by Region</h3>
+                                    <p>Regional performance</p>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="regionChart"></canvas>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= DATA TABLE ================= -->
+                <section id="data" class="data-section">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h2>Uploaded Data</h2>
+                            <p>Preview of your Excel data.</p>
+                        </div>
+
+                        <span id="rowCount" class="row-count">
+                            0 rows
+                        </span>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table id="dataTable">
+
+                            <thead id="tableHead">
+                                <tr>
+                                    <th>No data</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tableBody">
+                                <tr>
+                                    <td class="empty">
+                                        Upload an Excel file to see your data here.
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+                <!-- FOOTER -->
+                <footer>
+                    <p>DataVision © 2026 | Built with HTML, CSS & JavaScript</p>
+                </footer>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
+```
